@@ -1,0 +1,66 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ivgr1UserManager.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ivgr1UserManager.Views.MainWindow"
+        x:DataType="vm:UserViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="ivgr1UserManager"
+        Width="1000"
+        Height="800"
+        WindowStartupLocation="CenterScreen"
+        >
+
+    <!--<Design.DataContext>
+        ~1~ This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) @1@
+        <vm:UserViewModel/>
+    </Design.DataContext>-->
+<StackPanel Margin="20">
+    <TextBlock Text="First Name" />
+    <TextBox Text="{Binding FirstName , Mode=TwoWay}" 
+             Margin="0,0,0,10"
+             />
+    
+    <TextBlock Text="Last Name" />
+    <TextBox Text="{Binding LastName , Mode=TwoWay}" 
+             Margin="0,0,0,10"
+             />
+    
+    <TextBlock Text="Email" />
+    <TextBox Text="{Binding Email, Mode=TwoWay}" 
+             Margin="0,0,0,10"
+             />
+    
+    
+    <StackPanel Margin="20" Orientation="Horizontal">
+        <Button Content="Save users" Command="{Binding SaveCommand}" Margin="10"/>
+        <Button Content="Load users" Command="{Binding LoadCommand}" Margin="10"/>
+
+    </StackPanel>
+    
+    <ListBox ItemsSource="{Binding Users}" Margin="10">
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <TextBlock  Text="{Binding FirstName}" 
+                                FontSize="25"
+                                />
+                    <TextBlock  Text="{Binding LastName}" 
+                                FontSize="20" FontWeight="Bold"
+                                />
+                    <TextBlock  Text="{Binding Email}" 
+                                FontSize="15" FontStyle="Italic"
+                                />
+                </StackPanel>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+        
+    </ListBox>
+    
+</StackPanel>
+    
+
+</Window>

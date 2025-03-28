@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="ivgr1UserManager/App.axaml" value="ivgr1UserManager/ivgr1UserManager.csproj" />
+        <entry key="ivgr1UserManager/Views/MainWindow.axaml" value="ivgr1UserManager/ivgr1UserManager.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
