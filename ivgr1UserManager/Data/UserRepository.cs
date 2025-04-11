@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Dapper;
 using ivgr1UserManager.Models;
 using Npgsql;
@@ -15,10 +16,10 @@ public class UserRepository
         _connectionString = connectionString;
     }
 
-    public void InitDB()
+    public async Task InitDB()
     {
-        using var connection = new NpgsqlConnection(_connectionString);
-        connection.Execute(@"
+        await using var connection = new NpgsqlConnection(_connectionString);
+        await connection.ExecuteAsync(@"
                     CREATE TABLE IF NOT EXISTS users (
                         id SERIAL PRIMARY KEY,
                         first_name VARCHAR(50) NOT NULL,
@@ -26,15 +27,17 @@ public class UserRepository
                         email VARCHAR(50) NOT NULL UNIQUE
                     )
         ");
+        Console.WriteLine("Database initialized");
     }
 
 
-    public List<User> GetAllUsers()
+    public async Task<List<User>> GetAllUsersAsync()
     {
-        using var connection = new NpgsqlConnection(_connectionString);
-        return connection.Query<User>("SELECT * FROM users").AsList();
+        await using var connection = new NpgsqlConnection(_connectionString);
+        var users = await connection.QueryAsync<User>("SELECT * FROM users");
+        return users.AsList();
     }
-
+// tu skończyłem !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     public void AddUser(User user)
     {
         using var connection = new NpgsqlConnection(_connectionString);

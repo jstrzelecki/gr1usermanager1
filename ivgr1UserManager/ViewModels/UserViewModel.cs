@@ -1,67 +1,104 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Dapper;
+using ivgr1UserManager.Helpers;
 using ivgr1UserManager.Models;
+using ivgr1UserManager.Services;
 using Npgsql;
 
 namespace ivgr1UserManager.ViewModels;
 
 public partial class UserViewModel : ObservableObject
 {
-    private readonly UserRepository _userRepository;
-    
+    //private readonly UserRepository _userRepository;
+    private readonly UserService _userService;
 
     [ObservableProperty] private string _firstName;
     [ObservableProperty] private string _lastName;
     [ObservableProperty] private string _email;
 
+    [ObservableProperty] private bool _isViaEmailSelected;
+    [ObservableProperty] private bool _isViaSmsSelected;
+    [ObservableProperty] private bool _isNoUpdatesSelected;
+    [ObservableProperty] private bool _isChecked;
+
+    [ObservableProperty] private string _selectedAccountType;
+
+    public ObservableCollection<string> AccountTypes { get; } =
+    [
+        "Standard", "Premium", "Business"
+    ];
+    
     public ObservableCollection<User> Users { get; } = new();
     
     public ICommand SaveCommand { get; }
     public ICommand LoadCommand { get; }
 
-    public UserViewModel()
+    public UserViewModel(UserService userService)
     {
-        _userRepository = new UserRepository("""
+        _userService = userService;
+        /*_userRepository = new UserRepository("""
                                              Host=localhost;
                                              Port=5432;
                                              Username=js;
                                              Password=postgres;
                                              Database=users1_db;
-                                             """);
-        
-        SaveCommand = new RelayCommand(SaveUser);
-        LoadCommand = new RelayCommand(LoadUsers);
-        _userRepository.InitDB();
+                                             """);*/
+        SelectedAccountType = AccountTypes[0];
+        IsChecked = true;
+        SaveCommand = new AsyncRelayCommand(SaveUser);
+        LoadCommand = new AsyncRelayCommand(LoadUsers);
+        //_userRepository.InitDB();
         // LoadUsers();
     }
 
-    private void LoadUsers()
+    private async Task LoadUsers()
     {
-        Users.Clear();
+        try
+        {
+            var usersFromDb = await _userService.GetAllUsersAsync();
+            Users.Clear();
+            Users.AddRange(usersFromDb);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        
+        /*Users.Clear();
         foreach (var user in _userRepository.GetAllUsers())
         {
             Users.Add(user);
-        }
+        }*/
     }
 
-    private void SaveUser()
+    private async Task SaveUser()
     {
         var user = new User
         {
-            FirstName = FirstName,
-            LastName = LastName,
-            Email = Email
+            FirstName = FirstName.Trim(),
+            LastName = LastName.Trim(),
+            Email = Email.Trim(),
+            NotificationPreference = IsViaEmailSelected ? "Email" :
+                                     IsViaSmsSelected ? "SMS" :
+                                     "None",
+            AccountType = SelectedAccountType,
+            IsTermsAccepted = IsChecked,
+            
         };
         try
         {
-            _userRepository.AddUser(user);
+            await _userService.AddUserAsync(user);
             Users.Add(user);
             ClearFields();
+            /*//_userRepository.AddUser(user);
+            Users.Add(user);
+            ClearFields();*/
         }
         catch (PostgresException ex) when (ex.SqlState == "23505") // wartość unikalna
         {
@@ -71,7 +108,7 @@ public partial class UserViewModel : ObservableObject
         {   
             Console.WriteLine("Wszystkie pola powinny być wypełnione");
         }
-        LoadUsers();
+      //  LoadUsers();
     }
 
     private void ClearFields()
@@ -79,5 +116,10 @@ public partial class UserViewModel : ObservableObject
         FirstName = string.Empty;
         LastName = string.Empty;
         Email = string.Empty;
+        IsViaEmailSelected = false;
+        IsViaSmsSelected = false;
+        IsNoUpdatesSelected = true;
+        SelectedAccountType = AccountTypes[0];
+        IsChecked = true;
     }
 }

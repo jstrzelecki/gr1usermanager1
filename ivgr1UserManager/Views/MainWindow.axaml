@@ -33,6 +33,37 @@
     <TextBox Text="{Binding Email, Mode=TwoWay}" 
              Margin="0,0,0,10"
              />
+    <Border BorderBrush="BlueViolet" BorderThickness="2"
+            Margin="10" CornerRadius="10" Padding="20"
+            >
+        <StackPanel>
+            <TextBlock Text="Updates info" Margin="0,-35,0,0" 
+                       Foreground="BlueViolet" Width="100"
+                       Background="White" 
+                       Padding="5"
+                       />
+            <RadioButton GroupName="InfoUpdates" Content="Przez email"
+                         IsChecked="{Binding IsViaEmailSelected}"
+                         />
+            <RadioButton GroupName="InfoUpdates" Content="Przez SMS"
+                         IsChecked="{Binding IsViaSmsSelected}"
+                         />
+            <RadioButton GroupName="InfoUpdates" Content="Brak informacji"
+                         IsChecked="{Binding IsNoUpdatesSelected}"
+                         />
+        </StackPanel>
+    </Border>
+    
+    <ComboBox ItemsSource="{Binding AccountTypes}"
+              SelectedItem="{Binding SelectedAccountType}"
+              Width="200"
+              Margin="10,10,0,0"
+              />
+    
+    <CheckBox Content="Zgadzam się ze wszystkim"
+              IsChecked="{Binding IsChecked, Mode=TwoWay}"
+              Margin="10"
+              />
     
     
     <StackPanel Margin="20" Orientation="Horizontal">

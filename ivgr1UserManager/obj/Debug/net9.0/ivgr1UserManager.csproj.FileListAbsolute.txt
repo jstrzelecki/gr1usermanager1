@@ -69,3 +69,4 @@
 /home/js/RiderProjects/ivgr1UserManager/ivgr1UserManager/obj/Debug/net9.0/ivgr1Use.D99EF042.Up2Date
 /home/js/RiderProjects/ivgr1UserManager/ivgr1UserManager/obj/Debug/net9.0/ivgr1UserManager.genruntimeconfig.cache
 /home/js/RiderProjects/ivgr1UserManager/ivgr1UserManager/obj/Debug/net9.0/ref/ivgr1UserManager.dll
+/home/js/RiderProjects/ivgr1UserManager/ivgr1UserManager/obj/Debug/net9.0/ivgr1UserManager.sourcelink.json
